@@ -23,7 +23,7 @@ This is a multi-person chat room demo written using our webRTC.io library. [Exam
 
 ## Installation
 ```bash
- npm install webRTC.io
+ npm install webrtc.io
 ```
 for absurdly detailed instruction on setting up the demo, go to the demo repo.
 
