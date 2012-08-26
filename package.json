@@ -14,11 +14,27 @@
   "keywords": [
     "webrtc"
   ],
-  "author": "Ben Brittain",
+  "author": {
+    "name": "Ben Brittain",
+    "email": "ben@brittain.org"
+  },
   "contributors": [
-      { "name": "Ben Brittain", "email": "ben@brittain.org" }
-    , { "name": "Dennis Mårtensson", "email": "me@dennis.is" }
-    , { "name": "David Peter", "email": "david.a.peter@gmail.com" }
+    {
+      "name": "Ben Brittain",
+      "email": "ben@brittain.org"
+    },
+    {
+      "name": "Dennis Mårtensson",
+      "email": "me@dennis.is"
+    },
+    {
+      "name": "David Peter",
+      "email": "david.a.peter@gmail.com"
+    },
+    {
+      "name": "Jesús Leganés Combarro",
+      "email": "piranna@gmail.com"
+    }
   ],
   "license": "MIT"
 }
