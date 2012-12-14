@@ -8,8 +8,8 @@
     "url": "git://github.com/cavedweller/webRTC.io.git"
   },
   "dependencies": {
-    "webrtc.io-client": "latest",
-    "ws": "latest"
+    "webrtc.io-client": ">= 0.0.0",
+    "ws": ">= 0.0.0"
   },
   "keywords": [
     "webrtc"
