@@ -1,5 +1,5 @@
 # webRTC.io
-### [demo](http://bit.ly/webrtcio)
+### [demo](http://webrtc.dennis.is/)
 An abstraction layer for webRTC. Aim is to simplify the HTML5 web standard webRTC in a similar manner to socket.io w/ websockets. This project is still in an infintile stage, please send feature requests (or pulls!) to us as well as bug reports.
 
 ## What is webRTC?
@@ -19,7 +19,7 @@ Enable PeerConnection
 ```
 
 ## Demo
-This is a multi-person chat room demo written using our webRTC.io library. [Example Site](http://bit.ly/webrtcio) & [Repository](http://www.github.com/webRTC/webrtc.io-demo/) (browser support section still applies!)
+This is a multi-person chat room demo written using our webRTC.io library. [Example Site](http://webrtc.dennis.is/) & [Repository](http://www.github.com/webRTC/webrtc.io-demo/) (browser support section still applies!)
 
 ## Installation
 ```bash
