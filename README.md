@@ -33,15 +33,28 @@ To run the server in debug mode, append '-debug' to the node command
 
 ### Client
 
-
 ```html
+<video id="local" autoplay="autoplay"></video>
+<video id="remote" autoplay="autoplay"></video>
+
 <script src="/webrtc.io.js"></script>
 <script>
-  rtc.createStream({"video": true, "audio":true}, function(stream){
+
+  // note: make sure hostname available to all connecting clients
+  // (ie. probably not `localhost`)
+  rtc.connect('ws://yourserveraddress:8001');
+
+  rtc.createStream({"video": true, "audio":false}, function(stream){
     // get local stream for manipulation
-  }
-  rtc.connect('ws://yourserveraddress:8001', optionalRoom);
-//then a bunch of callbacks are available
+    rtc.attachStream(stream, 'local');
+  });
+
+  rtc.on('add remote stream', function(stream){
+    // show the remote video
+    rtc.attachStream(stream, 'remote');
+  });
+
+  // more rtc callbacks are available
 </script>
 ```
 
