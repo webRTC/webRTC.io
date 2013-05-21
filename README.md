@@ -61,9 +61,25 @@ To run the server in debug mode, append '-debug' to the node command
 ### Server
 
 ```javascript
-var webRTC = require('webrtc.io').listen(8001);
+var webRTC = require('webrtc.io').listen({ 'port': 8001 });
 //then a bunch of callbacks are available
 ```
+
+Or passing a http server:
+```javascript
+var httpServer = require('http').createServer(),
+    webRTC = require('webrtc.io').listen({ 'server': httpServer });
+httpServer.listen(8001);
+```
+
+When using another websocket server on the httpServer, pass a path option:
+```javascript
+var httpServer = require('http').createServer(),
+    wsServer = require('ws').createServer({ 'server': httpServer, 'path': '/websocket' }),
+    webRTC = require('webrtc.io').listen({ 'server': httpServer, 'path': '/webrtc'  });
+httpServer.listen(8001);
+```
+
 
 ## Stumped?
 ```
