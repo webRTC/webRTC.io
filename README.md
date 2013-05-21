@@ -48,7 +48,7 @@ To run the server in debug mode, append '-debug' to the node command
 ### Server
 
 ```javascript
-var webRTC = require('webrtc.io').listen(8001);
+var webRTC = require('webrtc.io').listen({ 'port': 8001 });
 //then a bunch of callbacks are available
 ```
 
