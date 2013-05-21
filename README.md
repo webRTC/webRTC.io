@@ -53,14 +53,15 @@ var webRTC = require('webrtc.io').listen({ 'port': 8001 });
 ```
 
 Or passing a http server:
-
-```var httpServer = require('http').createServer(),
+```javascript
+var httpServer = require('http').createServer(),
     webRTC = require('webrtc.io').listen({ 'server': httpServer });
 httpServer.listen(8001);
 ```
 
 When using another websocket server on the httpServer, pass a path option:
-```var httpServer = require('http').createServer(),
+```javascript
+var httpServer = require('http').createServer(),
     wsServer = require('ws').createServer({ 'server': httpServer, 'path': '/websocket' }),
     webRTC = require('webrtc.io').listen({ 'server': httpServer, 'path': '/webrtc'  });
 httpServer.listen(8001);
