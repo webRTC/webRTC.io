@@ -1,0 +1,3 @@
+[submodule "webrtc.io-client"]
+	path = webrtc.io-client
+	url = https://github.com/webRTC/webrtc.io-client
