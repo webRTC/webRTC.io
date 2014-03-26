@@ -6,21 +6,23 @@
     <script src="/webrtc.io.js"></script>
   </head>
   <body onload="init()">
-    <div id="videos">
-      <a href="https://github.com/webRTC"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-      <video id="you" class="flip" autoplay width="263" height="200" style="position: absolute; left: 0px; bottom: 0px;"></video>
-    </div>
-    <div id="chatbox">
-      <div id="hideShowMessages" class="button">toggle chat</div>
-      <div id="messages">
+    
+    <div id="sidebar">
+      <div class="buttonBox">
+        <div id="fullscreen" class="button">Enter Full Screen</div>
+        <div id="newRoom" class="button">Create A New Room</div>
       </div>
-      <input id="chatinput" type="text" placeholder="Message:"/>
+      <video id="you" class="flip" autoplay></video>
+      <div id="chatbox">
+        <!--<div id="hideShowMessages" class="button">toggle chat</div>-->
+        <div id="messages">
+        </div>
+        <input id="chatinput" type="text" placeholder="Message:"/>
+      </div>
     </div>
 
-    <div class="buttonBox">
-      <div id="fullscreen" class="button">Enter Full Screen</div>
-      <div id="newRoom" class="button">Create A New Room</div>
-    </div>
+
+    <div id="videos" class="clearfix"></div>
     
     <script src="/script.js"></script>
   </body>

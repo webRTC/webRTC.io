@@ -3,6 +3,7 @@ var PeerConnection = window.PeerConnection || window.webkitPeerConnection00 || w
 
 function getNumPerRow() {
   var len = videos.length;
+  console.log("len", len);
   var biggest;
 
   // Ensure length is even for better division.
@@ -19,24 +20,24 @@ function getNumPerRow() {
 
 function subdivideVideos() {
   var perRow = getNumPerRow();
+  console.log("perRow", perRow);
   var numInRow = 0;
   for(var i = 0, len = videos.length; i < len; i++) {
     var video = videos[i];
-    setWH(video, i);
+    setWH(video, i, perRow);
     numInRow = (numInRow + 1) % perRow;
   }
 }
 
-function setWH(video, i) {
-  var perRow = getNumPerRow();
+function setWH(video, i, perRow) {
+  //var perRow = getNumPerRow();
   var perColumn = Math.ceil(videos.length / perRow);
-  var width = Math.floor((window.innerWidth) / perRow);
-  var height = Math.floor((window.innerHeight - 190) / perColumn);
-  video.width = width;
-  video.height = height;
-  video.style.position = "absolute";
-  video.style.left = (i % perRow) * width + "px";
-  video.style.top = Math.floor(i / perRow) * height + "px";
+  console.log("perColumn", perColumn);
+  var container = document.getElementById("videos");
+  console.log("container", container, container.clientWidth);
+  var width = Math.floor((container.clientWidth) / perRow);
+  var height = Math.floor((container.clientHeight) / perColumn);
+  video.style.width = width - (videos.length*2);
 }
 
 function cloneVideo(domId, socketId) {
@@ -49,10 +50,12 @@ function cloneVideo(domId, socketId) {
 }
 
 function removeVideo(socketId) {
+  console.log("Removing video");
   var video = document.getElementById('remote' + socketId);
   if(video) {
     videos.splice(videos.indexOf(video), 1);
     video.parentNode.removeChild(video);
+    subdivideVideos();
   }
 }
 
@@ -139,7 +142,7 @@ function initChat() {
   var room = window.location.hash.slice(1);
   var color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
 
-  toggleHideShow.addEventListener('click', function() {
+  /*toggleHideShow.addEventListener('click', function() {
     var element = document.getElementById("messages");
 
     if(element.style.display === "block") {
@@ -149,7 +152,7 @@ function initChat() {
       element.style.display = "block";
     }
 
-  });
+  });*/
 
   input.addEventListener('keydown', function(event) {
     var key = event.which || event.keyCode;
@@ -181,6 +184,7 @@ function init() {
       "audio": true
     }, function(stream) {
       document.getElementById('you').src = URL.createObjectURL(stream);
+      document.getElementById('you').muted = true; //prevent echo locally
       document.getElementById('you').play();
       //videos.push(document.getElementById('you'));
       //rtc.attachStream(stream, 'you');
@@ -199,6 +203,7 @@ function init() {
     console.log("ADDING REMOTE STREAM...");
     var clone = cloneVideo('you', socketId);
     document.getElementById(clone.id).setAttribute("class", "");
+    document.getElementById(clone.id).muted = true;
     rtc.attachStream(stream, clone.id);
     subdivideVideos();
   });
