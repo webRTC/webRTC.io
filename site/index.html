@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>Example webrtc.io</title>
+    <link type="text/css" href="/style.css" rel="stylesheet"></link>
+
+    <script src="/webrtc.io.js"></script>
+  </head>
+  <body onload="init()">
+    
+    <div id="sidebar">
+      <div class="buttonBox">
+        <div id="fullscreen" class="button">Enter Full Screen</div>
+        <div id="joinRoom" class="button">Join Room</div>
+      </div>
+      <video id="you" class="flip" autoplay></video>
+      <div id="chatbox">
+        <!--<div id="hideShowMessages" class="button">toggle chat</div>-->
+        <div id="messages">
+        </div>
+        <input id="chatinput" type="text" placeholder="Message:"/>
+      </div>
+    </div>
+
+    <div id="videos" class="clearfix"></div>
+
+    <div id="roomList" class="hide">
+      <h1 class="title">Room List<span class="closeButton">X</span></h1>
+      <div><label>Room name: <input type="text" id="roomName" name="roomName" /></label><div id="createRoom" class="button">Join Room</div></div>
+      <div id="roomListCont"></div>
+    </div>
+    
+    <script src="/script.js"></script>
+  </body>
+</html>

@@ -1,23 +1,37 @@
 {
-  "name": "webrtc.io",
-  "version": "0.0.4",
-  "description": "Abstraction for webRTC.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/cavedweller/webRTC.io.git"
+  "name": "MultiWebRTC",
+  "description": "Example of multi user webrtc",
+  "version": "0.0.2-1",
+  "engines": {
+    "node": ">= 0.6.0"
   },
   "dependencies": {
-    "ws": ">= 0.0.0"
+    "webrtc.io": "latest",
+    "webrtc.io-client": "latest",
+    "express": "3.1.0",
+    "ws": "latest"
   },
-  "keywords": [
-    "webrtc"
-  ],
+  "subdomain": "MultiWebRTC",
+  "scripts": {
+    "start": "example/server.js"
+  },
   "author": "Ben Brittain",
   "contributors": [
-      { "name": "Ben Brittain", "email": "ben@brittain.org" }
-    , { "name": "Dennis Mårtensson", "email": "me@dennis.is" }
-    , { "name": "David Peter", "email": "david.a.peter@gmail.com" }
-  ],
-  "license": "MIT"
+    {
+      "name": "Ben Brittain",
+      "email": "ben@brittain.org"
+    },
+    {
+      "name": "Dennis Mårtensson",
+      "email": "me@dennis.is"
+    },
+    {
+      "name": "David Peter",
+      "email": "david.a.peter@gmail.com"
+    },
+    {
+      "name": "Allan Bogh",
+      "email": "ajbogh@allanbogh.com"
+    }
+  ]
 }

@@ -1,80 +1,48 @@
-# webRTC.io
-### [demo](http://webrtc.dennis.is/)
-An abstraction layer for webRTC. Aim is to simplify the HTML5 web standard webRTC in a similar manner to socket.io w/ websockets. This project is still in an infantile stage, please send feature requests (or pulls!) to us as well as bug reports.
+#webrtc.io-demo
+==============
 
-## What is webRTC?
-webRTC is a new webstandard being developed for peer-to-peer communication on the web. This means that browsers will be able to send information, without sending information through the server. Server side this will reduce load dramatically.
+You can have a look at the [demo](http://webrtc.dennis.is/)
 
-Currently the webRTC standard is very focused on the video & audio aspects of the project. In the future (hopefully near future!) they will begin implementing the data channel, which will allow arbitrary data to be sent peer-to-peer. For now the webRTC team is focused on stabalizing and optimizing the video and audio channels.
+##Instructions on how to setup the demo:
 
-Unfortunately, a server (or two) will still be required for two reasons, The media for the page must be initially supplied, and the server, in conjunction with a [STUN server](http://en.wikipedia.org/wiki/STUN) (abstracted away by the webRTC.io library), is required to synchronize the connections.
+Run in your terminal
 
-## Browser Support
-webRTC is supported in very few browsers. We recommend either chrome from either the dev channel or the canary release.
-After installation, go to [About://flags](chrome://flags/). Enable
-```
-Enable Media Source API on <video> elements. (this may be unnecessary)
-Enable MediaStream (this may be unnecessary)
-Enable PeerConnection
+```bash 
+git clone git@github.com:webRTC/webrtc.io-demo.git
 ```
 
-## Demo
-This is a multi-person chat room demo written using our webRTC.io library. [Example Site](http://webrtc.dennis.is/) & [Repository](http://www.github.com/webRTC/webrtc.io-demo/) (browser support section still applies!)
-
-## Installation
-```bash
- npm install webrtc.io
-```
-for absurdly detailed instruction on setting up the demo, go to the demo repo.
-
-To run the server in debug mode, append '-debug' to the node command
-
-## Example code
-
-### Client
-
-```html
-<video id="local" autoplay="autoplay"></video>
-<video id="remote" autoplay="autoplay"></video>
-
-<script src="/webrtc.io.js"></script>
-<script>
-
-  // note: make sure hostname available to all connecting clients
-  // (ie. probably not `localhost`)
-  rtc.connect('ws://yourserveraddress:8001');
-
-  rtc.createStream({"video": true, "audio":false}, function(stream){
-    // get local stream for manipulation
-    rtc.attachStream(stream, 'local');
-  });
-
-  rtc.on('add remote stream', function(stream){
-    // show the remote video
-    rtc.attachStream(stream, 'remote');
-  });
-
-  // more rtc callbacks are available
-</script>
+```bash 
+cd webrtc.io-demo
 ```
 
-### Server
-
-```javascript
-var webRTC = require('webrtc.io').listen(8001);
-//then a bunch of callbacks are available
+```bash 
+npm install
 ```
 
-## Stumped?
+```bash 
+cd site
 ```
-#webrtc.io on freenode
+
+```bash 
+node server.js
 ```
 
-### License
-Copyright (C) 2012 [Ben Brittain](https://github.com/cavedweller), [Dennis Mårtensson](https://github.com/dennismartensson), [David Peter](https://github.com/sarenji)
+In a version of Chrome that have webRTC support.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+go to [localhost:8080](http://localhost:8080)
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+click allow to see your camera
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+go to [localhost:8080](http://localhost:8080)
+
+click allow to see your camera and the connection will be made between your to open windows.
+
+
+##For instructions on how to start developing with webRTC.io
+
+go to [https://github.com/webRTC/webRTC.io](https://github.com/webRTC/webRTC.io) and read the instructions.
+
+Developed by:
+    [@dennismatensson](https://github.com/dennismartensson)
+    [@cavedweller](https://github.com/cavedweller)
+    [@sarenji](https://github.com/sarenji)
