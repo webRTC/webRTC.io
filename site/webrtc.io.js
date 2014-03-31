@@ -146,7 +146,7 @@ if (navigator.webkitGetUserMedia) {
     rtc._socket = new WebSocket(server);
 
     rtc._socket.onopen = function() {
-
+      console.log("onopen");
       rtc._socket.send(JSON.stringify({
         "eventName": "join_room",
         "data": {
@@ -207,8 +207,20 @@ if (navigator.webkitGetUserMedia) {
         rtc.fire('receive answer', data);
       });
 
+
+      rtc.on('receive_room_list', function(data) {
+        console.log("receive_room_list", data);
+        rtc.fire('receive room list', data);
+      });
+
       rtc.fire('connect');
     };
+  };
+
+  rtc.getRoomList = function(){
+    rtc._socket.send(JSON.stringify({
+      "eventName": "get_room_list"
+    }));
   };
 
 

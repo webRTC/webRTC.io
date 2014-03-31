@@ -1,9 +1,10 @@
 var videos = [];
 var PeerConnection = window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection || window.mozRTCPeerConnection || window.RTCPeerConnection;
+var ASPECTRATIO = 4/3;
+var VIDPADDING = 4;
 
 function getNumPerRow() {
   var len = videos.length;
-  console.log("len", len);
   var biggest;
 
   // Ensure length is even for better division.
@@ -18,26 +19,36 @@ function getNumPerRow() {
   return biggest;
 }
 
+
 function subdivideVideos() {
   var perRow = getNumPerRow();
-  console.log("perRow", perRow);
   var numInRow = 0;
   for(var i = 0, len = videos.length; i < len; i++) {
     var video = videos[i];
-    setWH(video, i, perRow);
+    perRow = setWH(video, i, perRow);
     numInRow = (numInRow + 1) % perRow;
   }
 }
 
+
+
 function setWH(video, i, perRow) {
-  //var perRow = getNumPerRow();
   var perColumn = Math.ceil(videos.length / perRow);
-  console.log("perColumn", perColumn);
   var container = document.getElementById("videos");
-  console.log("container", container, container.clientWidth);
+  
   var width = Math.floor((container.clientWidth) / perRow);
-  var height = Math.floor((container.clientHeight) / perColumn);
-  video.style.width = width - (videos.length*2);
+  var height = width / ASPECTRATIO;
+
+  //check if the height of the columns is greater than the screen size
+  if(window.innerHeight < (height * perColumn) + (perColumn * VIDPADDING)){
+    //add one more video per row
+    return setWH(video, i, perRow+1);
+  }else{ //height of video pans out
+    video.style.width = width - (perRow * VIDPADDING);
+    video.style.height = height - (perColumn * VIDPADDING);
+  }
+
+  return perRow;
 }
 
 function cloneVideo(domId, socketId) {
@@ -50,7 +61,6 @@ function cloneVideo(domId, socketId) {
 }
 
 function removeVideo(socketId) {
-  console.log("Removing video");
   var video = document.getElementById('remote' + socketId);
   if(video) {
     videos.splice(videos.indexOf(video), 1);
@@ -62,11 +72,7 @@ function removeVideo(socketId) {
 function addToChat(msg, color) {
   var messages = document.getElementById('messages');
   msg = sanitize(msg);
-  if(color) {
-    msg = '<span style="color: ' + color + '; padding-left: 15px">' + msg + '</span>';
-  } else {
-    msg = '<strong style="padding-left: 15px">' + msg + '</strong>';
-  }
+  msg = '<strong style="'+(color?'color: ' + color + ';':'')+'">'+ (color?'Them: ':'You: ') + msg + '</strong>';
   messages.innerHTML = messages.innerHTML + msg + '<br>';
   messages.scrollTop = 10000;
 }
@@ -75,31 +81,48 @@ function sanitize(msg) {
   return msg.replace(/</g, '&lt;');
 }
 
-function initFullScreen() {
-  var button = document.getElementById("fullscreen");
-  button.addEventListener('click', function(event) {
-    var elem = document.getElementById("videos");
-    //show full screen
-    elem.webkitRequestFullScreen();
+function queryObj() {
+  var result = {}, keyValuePairs = location.search.slice(1).split('&');
+
+  keyValuePairs.forEach(function(keyValuePair) {
+    if(!keyValuePair){ return; } //side effect of using split is blank strings
+    keyValuePair = keyValuePair.split('=');
+    result[keyValuePair[0]] = decodeURIComponent(keyValuePair[1]) || '';
   });
+
+  return result;
+}
+function queryStr(queryObj){
+  var hrefString = "";
+  for(var i in queryObj){
+    hrefString += "&"+i+"="+queryObj[i];
+  }
+  hrefString = hrefString.replace(/^&/,'');
+  return hrefString;
 }
 
-function initNewRoom() {
-  var button = document.getElementById("newRoom");
+function initFullScreen() {
+  var elem = document.getElementById("videos");
+  //show full screen
+  elem.webkitRequestFullScreen();
+}
 
-  button.addEventListener('click', function(event) {
-
+function initNewRoom(roomName) {
+  if(!roomName){
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
     var string_length = 8;
-    var randomstring = '';
+    var roomName = '';
     for(var i = 0; i < string_length; i++) {
       var rnum = Math.floor(Math.random() * chars.length);
-      randomstring += chars.substring(rnum, rnum + 1);
+      roomName += chars.substring(rnum, rnum + 1);
     }
+  }
 
-    window.location.hash = randomstring;
-    location.reload();
-  })
+  var query = queryObj();
+  query.room = roomName;
+  var hrefString = "?"+queryStr(query);
+
+  window.location.href = hrefString;
 }
 
 
@@ -138,9 +161,10 @@ function initChat() {
   }
 
   var input = document.getElementById("chatinput");
-  var toggleHideShow = document.getElementById("hideShowMessages");
+  //var toggleHideShow = document.getElementById("hideShowMessages");
   var room = window.location.hash.slice(1);
-  var color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+  //creates a hex color, /3 to keep it in the darker color range.
+  var color = "#" + (((1 << 24)/3) * Math.random() | 0).toString(16);
 
   /*toggleHideShow.addEventListener('click', function() {
     var element = document.getElementById("messages");
@@ -171,9 +195,64 @@ function initChat() {
   }, false);
   rtc.on(chat.event, function() {
     var data = chat.recv.apply(this, arguments);
-    console.log(data.color);
     addToChat(data.messages, data.color.toString(16));
   });
+}
+
+function hide(el){
+  if(el.className.indexOf('hide') === -1){
+    el.className += (el.className !== ""?" ":"")+"hide";  
+  }
+}
+function show(el){
+  if(el.className.indexOf('hide') !== -1){
+    el.className = el.className.replace('hide', '');
+  }
+}
+
+function showRoomList(data){
+  var el = document.getElementById('roomList');
+  var rlEl = document.getElementById('roomListCont');
+  rlEl.innerHTML = "";
+  var ul = document.createElement("ul");
+  var li = null;
+  var href = null;
+  var linkText = "";
+  var currentQueryList = queryObj();
+  var j;
+  var hrefString = "";
+  for(var i=0; i<data.roomList.length; i++){
+    hrefString = "";
+    if(data.roomList[i] !== ""){
+      li = document.createElement("li");
+      href = document.createElement("a");
+      linkText = document.createTextNode(decodeURIComponent(data.roomList[i]));
+      href.appendChild(linkText);
+
+      currentQueryList.room = encodeURIComponent(data.roomList[i]);
+      hrefString = queryStr(currentQueryList);
+
+      href.href = "?"+hrefString;
+      href.onclick = function(){
+        window.location.href = this.href;
+      }
+      li.appendChild(href);
+      ul.appendChild(li);
+    }
+  }
+  if(data.roomList.length > 0){
+    rlEl.appendChild(ul);
+  }
+  show(el);
+}
+function hideRoomList(){
+  var el = document.getElementById('roomList');
+  hide(el);
+}
+
+function closeDialog(event){
+  var el = event.target.parentNode.parentNode; //h1, div
+  hide(el);
 }
 
 
@@ -186,18 +265,20 @@ function init() {
       document.getElementById('you').src = URL.createObjectURL(stream);
       document.getElementById('you').muted = true; //prevent echo locally
       document.getElementById('you').play();
-      //videos.push(document.getElementById('you'));
-      //rtc.attachStream(stream, 'you');
-      //subdivideVideos();
     });
   } else {
     alert('Your browser is not supported or you have to turn on flags. In chrome you go to chrome://flags and turn on Enable PeerConnection remember to restart chrome');
   }
 
 
-  var room = window.location.hash.slice(1);
 
-  rtc.connect("ws:" + window.location.href.substring(window.location.protocol.length).split('#')[0], room);
+  //figure out which room to use
+  //var room = window.location.hash.slice(1);
+  var room = queryObj();
+  if(room.room){
+    room = room.room;
+  }
+  rtc.connect("ws:" + window.location.href.substring(window.location.protocol.length).split('?')[0], room);
 
   rtc.on('add remote stream', function(stream, socketId) {
     console.log("ADDING REMOTE STREAM...");
@@ -205,14 +286,40 @@ function init() {
     document.getElementById(clone.id).setAttribute("class", "");
     document.getElementById(clone.id).muted = true;
     rtc.attachStream(stream, clone.id);
+    
     subdivideVideos();
   });
   rtc.on('disconnect stream', function(data) {
-    console.log('remove ' + data);
     removeVideo(data);
   });
-  initFullScreen();
-  initNewRoom();
+
+  rtc.on('receive room list', function(data) {
+    showRoomList(data);
+  });
+  
+  //init additional functionality
+  var button = document.getElementById("fullscreen");
+  button.addEventListener('click', function(event) {
+    initFullScreen();
+  });
+  
+  var createRoomButton = document.getElementById("createRoom");
+  createRoomButton.addEventListener('click', function(event) {
+    initNewRoom(document.getElementById("roomName").value);
+  });
+
+  var joinRoom = document.getElementById("joinRoom");
+  joinRoom.addEventListener('click', function(event) {
+    rtc.getRoomList();
+  });
+
+  var closeButtons = document.getElementsByClassName("closeButton");
+  for (var i = 0; i < closeButtons.length; i++) {
+    closeButtons[i].addEventListener('click', function(event) {
+      closeDialog(event);
+    });
+  };
+
   initChat();
 }
 

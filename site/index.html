@@ -10,7 +10,7 @@
     <div id="sidebar">
       <div class="buttonBox">
         <div id="fullscreen" class="button">Enter Full Screen</div>
-        <div id="newRoom" class="button">Create A New Room</div>
+        <div id="joinRoom" class="button">Join Room</div>
       </div>
       <video id="you" class="flip" autoplay></video>
       <div id="chatbox">
@@ -21,8 +21,13 @@
       </div>
     </div>
 
-
     <div id="videos" class="clearfix"></div>
+
+    <div id="roomList" class="hide">
+      <h1 class="title">Room List<span class="closeButton">X</span></h1>
+      <div><label>Room name: <input type="text" id="roomName" name="roomName" /></label><div id="createRoom" class="button">Join Room</div></div>
+      <div id="roomListCont"></div>
+    </div>
     
     <script src="/script.js"></script>
   </body>
